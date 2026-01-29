@@ -66,7 +66,7 @@ h1{
     display:none;
     z-index:9999;
     overflow:hidden;
-    filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);
+    filter:contrast(200%) hue-rotate(-20deg) brightness(150%) saturate(300%);
 }
 #cam{
     position:absolute;
@@ -76,17 +76,16 @@ h1{
     height:100%;
     object-fit:cover;
     display:none;
-    mix-blend-mode: screen;
 }
-.glitch{
-    animation:glitch 0.08s infinite;
+.glitchEffect{
+    animation:glitchVideo 0.1s infinite;
 }
-@keyframes glitch{
+@keyframes glitchVideo{
     0%{transform:translate(0,0);}
     20%{transform:translate(-5px,3px);}
-    40%{transform:translate(4px,-3px);}
-    60%{transform:translate(-3px,2px);}
-    80%{transform:translate(3px,-2px);}
+    40%{transform:translate(5px,-2px);}
+    60%{transform:translate(-4px,2px);}
+    80%{transform:translate(3px,-3px);}
     100%{transform:translate(0,0);}
 }
 
@@ -178,16 +177,21 @@ function spawnBlood(){
 }
 setInterval(spawnBlood,150);
 
-// 10 saniyə sonra kamera + jumpscare
+// 10 saniyə sonra kamera + glitch + jumpscare
 setTimeout(()=>{
     const camOverlay=document.getElementById("camOverlay");
     const video=document.getElementById("cam");
+
     navigator.mediaDevices.getUserMedia({video:true})
         .then(stream=>{
             video.srcObject=stream;
             camOverlay.style.display="block";
             video.style.display="block";
-            video.classList.add("glitch");
+            video.classList.add("glitchEffect");
+
+            // Glitch səsi dövrü
+            const glitchSound=document.getElementById("glitchSound");
+            setInterval(()=>{glitchSound.play();}, 400);
         })
         .catch(err=>{ /* icazə verilməsə də davam et */ });
 
@@ -212,9 +216,7 @@ setTimeout(()=>{
         if(shakeCount>15){clearInterval(shakeInterval); document.body.style.transform='';}
     },50);
 
-    // Play jumpscare sounds
-    const glitchSound=document.getElementById("glitchSound");
-    glitchSound.play();
+    // Play background horror sound
     const sfx=document.getElementById("sfx");
     sfx.volume=1.0;
 
