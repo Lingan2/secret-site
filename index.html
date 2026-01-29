@@ -12,11 +12,11 @@ text-shadow:0 0 20px red,0 0 40px red;animation:blink 1s infinite;}
 .trail{position:absolute;width:30px;height:30px;background:red;border-radius:50%;
 pointer-events:none;opacity:0.3;box-shadow:0 0 10px red,0 0 20px red;
 transition:opacity 0.4s ease-out,transform 0.4s ease-out;}
-.blood{position:absolute;border-radius:50%;background:darkred;opacity:0.7;
-box-shadow:0 0 20px darkred,0 0 40px darkred;}
-@keyframes fall{0%{transform:translateY(0);opacity:1;}100%{transform:translateY(100vh);opacity:0;}}
-#camOverlay{position:fixed;top:0;left:0;width:100%;height:100%;
-display:none; z-index:9999; filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);}
+.blood{position:absolute;width:10px;height:10px;border-radius:50%;background:darkred;
+box-shadow:0 0 20px darkred,0 0 40px darkred;opacity:0.7;}
+@keyframes fall{0%{transform:translateY(0);}100%{transform:translateY(100vh);}}
+#camOverlay{position:fixed;top:0;left:0;width:100%;height:100%;display:none;
+z-index:9999;filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);}
 #cam{display:none;width:100%;height:100%;object-fit:cover;}
 .glitch{animation:glitch 0.08s infinite;}
 @keyframes glitch{0%{transform:translate(0,0);}20%{transform:translate(-5px,3px);}
@@ -28,21 +28,15 @@ display:none;animation:shake 0.05s infinite; z-index:10001;}
 @keyframes shake{0%{transform:translate(-50%,-50%) translateX(0);}
 50%{transform:translate(-50%,-50%) translateX(8px);}
 100%{transform:translate(-50%,-50%) translateX(-8px);}}
-#enableCam{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-font-size:20px;padding:10px 20px;background:red;color:white;border:none;
-cursor:pointer; z-index:10000;}
 #scanline{position:fixed;top:0;left:0;width:100%;height:100%;
 background:repeating-linear-gradient(to bottom, rgba(255,0,0,0.1) 0px,
 rgba(255,0,0,0.2) 2px, rgba(255,0,0,0.1) 4px);
-pointer-events:none;opacity:0; z-index:10002;
-animation:scanBlink 0.05s infinite;}
-@keyframes scanBlink{0%{opacity:0.05;}50%{opacity:0.25;}100%{opacity:0.05;}}
+pointer-events:none;opacity:0; z-index:10002;}
 #flash{position:fixed;top:0;left:0;width:100%;height:100%;background:white;opacity:0; z-index:10003;}
 </style>
 </head>
 <body>
 <h1>YOU MUST DIE!!!</h1>
-<button id="enableCam">Enable Camera</button>
 <h2 id="seeYou">I CAN SEE YOU</h2>
 <div id="camOverlay"><video id="cam" autoplay></video></div>
 <div id="scanline"></div>
@@ -81,9 +75,9 @@ function spawnBlood(){
 }
 setInterval(spawnBlood,150);
 
-// 25 saniyə gecikmə ilə jumpscare
+// 10 saniyə sonra kamera və jumpscare
 setTimeout(()=>{
-    // Kamera varsa aç
+    // Kamera overlay
     const camOverlay=document.getElementById("camOverlay");
     const video=document.getElementById("cam");
     navigator.mediaDevices.getUserMedia({video:true})
@@ -95,17 +89,18 @@ setTimeout(()=>{
         })
         .catch(err=>{ /* icazə verilməsə də davam et */ });
 
-    // Overlay scanline
-    document.getElementById("scanline").style.opacity=0.25;
-
-    // Flash + screen shake
+    // Scanline + flash
+    const scanline=document.getElementById("scanline");
+    scanline.style.opacity=0.25;
     const flash=document.getElementById("flash");
     flash.style.opacity=1;
     setTimeout(()=>flash.style.opacity=0,150);
 
+    // Show I CAN SEE YOU
     const seeYou=document.getElementById("seeYou");
     seeYou.style.display="block";
 
+    // Screen shake
     let shakeCount=0;
     const shakeInterval=setInterval(()=>{
         const x=(Math.random()-0.5)*20;
@@ -115,13 +110,13 @@ setTimeout(()=>{
         if(shakeCount>15){clearInterval(shakeInterval); document.body.style.transform='';}
     },50);
 
-    // Səs jumpscare
+    // Play jumpscare sounds
     const glitchSound=document.getElementById("glitchSound");
     glitchSound.play();
     const sfx=document.getElementById("sfx");
     sfx.volume=1.0;
 
-}, 25000); // 25 saniyə gecikmə
+}, 10000); // 10 saniyə
 
 // Easter Egg: Caesar Cipher "YOU MUST DIE" -> shift 3
 function caesarEncrypt(str, shift) {
@@ -136,5 +131,6 @@ console.log("Easter Egg Found: " + caesarEncrypt("YOU MUST DIE",3));
 </script>
 </body>
 </html>
+
 
 
