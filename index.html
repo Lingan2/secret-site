@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,119 +8,48 @@
 <title>YOU MUST DIE!!!</title>
 <meta name="robots" content="noindex, nofollow">
 <style>
-html, body{
-    margin:0;
-    width:100%;
-    height:100%;
-    background:black;
-    overflow:hidden;
-    cursor:none;
-}
-h1{
-    color:red;
-    font-size:90px;
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    text-shadow:0 0 20px red,0 0 40px red;
-    animation:blink 1s infinite;
-}
-@keyframes blink{
-    0%,50%,100%{opacity:1;}
-    25%,75%{opacity:0.3;}
-}
-.trail{
-    position:absolute;
-    width:30px;
-    height:30px;
-    background:red;
-    border-radius:50%;
-    pointer-events:none;
-    opacity:0.3;
-    box-shadow:0 0 10px red,0 0 20px red;
-    transition:opacity 0.4s ease-out,transform 0.4s ease-out;
-}
-.blood{
-    position:absolute;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:darkred;
-    box-shadow:0 0 20px darkred,0 0 40px darkred;
-    opacity:0.7;
-}
-@keyframes fall{
-    0%{transform:translateY(0);}
-    100%{transform:translateY(100vh);}
-}
+html, body{margin:0;width:100%;height:100%;background:black;overflow:hidden;cursor:none;}
+h1{color:red;font-size:90px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+text-shadow:0 0 20px red,0 0 40px red;animation:blink 1s infinite;}
+@keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0.3;}}
+.trail{position:absolute;width:30px;height:30px;background:red;border-radius:50%;
+pointer-events:none;opacity:0.3;box-shadow:0 0 10px red,0 0 20px red;
+transition:opacity 0.4s ease-out,transform 0.4s ease-out;}
+.blood{position:absolute;width:10px;height:10px;border-radius:50%;background:darkred;
+box-shadow:0 0 20px darkred,0 0 40px darkred;opacity:0.7;}
+@keyframes fall{0%{transform:translateY(0);}100%{transform:translateY(100vh);}}
 #camOverlay{
     position: fixed;
-    top:0;
-    left:0;
-    width:100%;      /* ekranın tam eni */
-    height:25%;      /* ekranın 1/4 hündürlüyü */
-    display:none;
-    z-index:9999;
-    overflow:hidden;
-    filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);
+    top: 0;           /* ekranın üstündə */
+    left: 0;
+    width: 100%;      /* ekranın tam eni */
+    height: 25%;      /* ekranın 1/4 hündürlüyü */
+    display: none;
+    z-index: 9999;
+    overflow: hidden;
+    filter: contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);
 }
 #cam{
-    width:100%;
-    height:100%;
-    object-fit:contain;  /* ekranın qalanını doldurmur */
-    display:none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* kvadrantı doldurur */
+    display: none;
 }
-.glitch{
-    animation:glitch 0.08s infinite;
-}
-@keyframes glitch{
-    0%{transform:translate(0,0);}
-    20%{transform:translate(-5px,3px);}
-    40%{transform:translate(4px,-3px);}
-    60%{transform:translate(-3px,2px);}
-    80%{transform:translate(3px,-2px);}
-    100%{transform:translate(0,0);}
-}
-#seeYou{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    color:red;
-    font-size:140px;
-    text-shadow:0 0 20px red,0 0 100px red;
-    display:none;
-    animation:shake 0.05s infinite;
-    z-index:10001;
-}
-@keyframes shake{
-    0%{transform:translate(-50%,-50%) translateX(0);}
-    50%{transform:translate(-50%,-50%) translateX(8px);}
-    100%{transform:translate(-50%,-50%) translateX(-8px);}
-}
-#scanline{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:repeating-linear-gradient(to bottom, rgba(255,0,0,0.1) 0px,
-    rgba(255,0,0,0.2) 2px, rgba(255,0,0,0.1) 4px);
-    pointer-events:none;
-    opacity:0;
-    z-index:10002;
-}
-#flash{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:white;
-    opacity:0;
-    z-index:10003;
-}
+.glitch{animation:glitch 0.08s infinite;}
+@keyframes glitch{0%{transform:translate(0,0);}20%{transform:translate(-5px,3px);}
+40%{transform:translate(4px,-3px);}60%{transform:translate(-3px,2px);}
+80%{transform:translate(3px,-2px);}100%{transform:translate(0,0);}}
+#seeYou{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+color:red;font-size:140px;text-shadow:0 0 20px red,0 0 100px red;
+display:none;animation:shake 0.05s infinite; z-index:10001;}
+@keyframes shake{0%{transform:translate(-50%,-50%) translateX(0);}
+50%{transform:translate(-50%,-50%) translateX(8px);}
+100%{transform:translate(-50%,-50%) translateX(-8px);}}
+#scanline{position:fixed;top:0;left:0;width:100%;height:100%;
+background:repeating-linear-gradient(to bottom, rgba(255,0,0,0.1) 0px,
+rgba(255,0,0,0.2) 2px, rgba(255,0,0,0.1) 4px);
+pointer-events:none;opacity:0; z-index:10002;}
+#flash{position:fixed;top:0;left:0;width:100%;height:100%;background:white;opacity:0; z-index:10003;}
 </style>
 </head>
 <body>
@@ -142,7 +74,7 @@ document.addEventListener('mousemove', e=>{
     t.style.left=e.pageX-15+'px';
     t.style.top=e.pageY-15+'px';
     document.body.appendChild(t);
-    setTimeout(()=>{t.style.opacity='0'; t.style.transform='scale(2)'; setTimeout(()=>t.remove(),400)},50);
+    setTimeout(()=>{t.style.opacity='0';t.style.transform='scale(2)';setTimeout(()=>t.remove(),400)},50);
 });
 
 // Qan damcıları
@@ -162,6 +94,7 @@ setInterval(spawnBlood,150);
 
 // 10 saniyə sonra kamera + jumpscare
 setTimeout(()=>{
+    // Kamera overlay (ekranın üst 1/4 hissəsi)
     const camOverlay=document.getElementById("camOverlay");
     const video=document.getElementById("cam");
     navigator.mediaDevices.getUserMedia({video:true})
@@ -215,5 +148,3 @@ console.log("Easter Egg Found: " + caesarEncrypt("YOU MUST DIE",3));
 </script>
 </body>
 </html>
-
-
