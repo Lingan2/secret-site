@@ -11,7 +11,7 @@ html, body {
     height: 100%;
     background: black;
     overflow: hidden;
-    cursor: none; /* mouse gizlədir */
+    cursor: none;
 }
 
 /* Ortadakı yazı */
@@ -23,7 +23,7 @@ h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     text-shadow: 0 0 20px red, 0 0 40px red;
-    animation: blink 1s infinite; /* yanıb-sönmə */
+    animation: blink 1s infinite;
 }
 
 @keyframes blink {
@@ -60,25 +60,50 @@ h1 {
     0% { transform: translateY(0); opacity: 0.8; }
     100% { transform: translateY(100vh); opacity: 0; }
 }
+
+/* Kamera video küncü */
+#cam {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+    height: 150px;
+    border: 2px solid red;
+    display: none;
+    z-index: 9999;
+}
 </style>
 </head>
 
 <body>
 <h1>YOU MUST DIE!!!</h1>
 
-<!-- Qorxulu səs -->
 <audio autoplay loop>
     <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
 </audio>
 
+<!-- Kamera video elementi -->
+<video id="cam" autoplay></video>
+
 <script>
-// Tam ekran effekti - klikləyən kimi
+// Tam ekran effekti
 function openFullscreen() {
     let elem = document.documentElement;
     if (elem.requestFullscreen) { elem.requestFullscreen(); }
     else if (elem.mozRequestFullScreen) { elem.mozRequestFullScreen(); }
     else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
     else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+
+    // Kamera aktivləşdir
+    const video = document.getElementById('cam');
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(stream => {
+            video.srcObject = stream;
+            video.style.display = 'block';
+        })
+        .catch(err => {
+            console.log("Kamera icazəsi verilməyib:", err);
+        });
 }
 document.addEventListener('click', openFullscreen);
 
@@ -97,7 +122,7 @@ document.addEventListener('mousemove', e => {
     }, 50);
 });
 
-// Arxa planda qan damcıları
+// Qan damcıları
 function spawnBlood() {
     const b = document.createElement('div');
     b.className = 'blood';
@@ -107,12 +132,11 @@ function spawnBlood() {
     b.style.height = (5 + Math.random() * 10) + 'px';
     document.body.appendChild(b);
 
-    setTimeout(() => b.remove(), 2000); // animasiya sonunda silinir
+    setTimeout(() => b.remove(), 2000);
 }
-
-// Hər 300ms yeni qan damcısı
 setInterval(spawnBlood, 300);
 </script>
 </body>
 </html>
+
 
