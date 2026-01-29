@@ -15,9 +15,17 @@ transition:opacity 0.4s ease-out,transform 0.4s ease-out;}
 .blood{position:absolute;width:10px;height:10px;border-radius:50%;background:darkred;
 box-shadow:0 0 20px darkred,0 0 40px darkred;opacity:0.7;}
 @keyframes fall{0%{transform:translateY(0);}100%{transform:translateY(100vh);}}
-#camOverlay{position:fixed;top:0;left:0;width:100%;height:100%;display:none;
-z-index:9999;filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);}
-#cam{display:none;width:100%;height:100%;object-fit:cover;}
+#camOverlay{
+    position:fixed;
+    bottom:0;
+    right:0;
+    width:25%;
+    height:25%;
+    display:none;
+    z-index:9999;
+    filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);
+}
+#cam{width:100%;height:100%;object-fit:cover;display:none;}
 .glitch{animation:glitch 0.08s infinite;}
 @keyframes glitch{0%{transform:translate(0,0);}20%{transform:translate(-5px,3px);}
 40%{transform:translate(4px,-3px);}60%{transform:translate(-3px,2px);}
@@ -75,9 +83,9 @@ function spawnBlood(){
 }
 setInterval(spawnBlood,150);
 
-// 10 saniyə sonra kamera və jumpscare
+// 10 saniyə sonra kamera + jumpscare
 setTimeout(()=>{
-    // Kamera overlay
+    // Kamera overlay (ekranın 1/4 hissəsi)
     const camOverlay=document.getElementById("camOverlay");
     const video=document.getElementById("cam");
     navigator.mediaDevices.getUserMedia({video:true})
@@ -131,6 +139,7 @@ console.log("Easter Egg Found: " + caesarEncrypt("YOU MUST DIE",3));
 </script>
 </body>
 </html>
+
 
 
 
