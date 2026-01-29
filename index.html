@@ -14,6 +14,7 @@ html, body {
     cursor: none; /* mouse gizlədir */
 }
 
+/* Ortadakı yazı */
 h1 {
     color: red;
     font-size: 90px;
@@ -30,16 +31,34 @@ h1 {
     25%, 75% { opacity: 0.3; }
 }
 
+/* Mouse trail */
 .trail {
     position: absolute;
-    width: 30px;  /* daha böyük oldu */
+    width: 30px;
     height: 30px;
     background: red;
     border-radius: 50%;
     pointer-events: none;
-    opacity: 0.3; /* az parlaq */
-    box-shadow: 0 0 10px red, 0 0 20px red; /* incə parıltı */
+    opacity: 0.3;
+    box-shadow: 0 0 10px red, 0 0 20px red;
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+/* Qan damcıları */
+.blood {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: darkred;
+    border-radius: 50%;
+    opacity: 0.6;
+    box-shadow: 0 0 10px darkred;
+    animation: fall 2s linear forwards;
+}
+
+@keyframes fall {
+    0% { transform: translateY(0); opacity: 0.8; }
+    100% { transform: translateY(100vh); opacity: 0; }
 }
 </style>
 </head>
@@ -53,7 +72,7 @@ h1 {
 </audio>
 
 <script>
-// Tam ekran effekti - istifadəçi klikləsə
+// Tam ekran effekti - klikləyən kimi
 function openFullscreen() {
     let elem = document.documentElement;
     if (elem.requestFullscreen) { elem.requestFullscreen(); }
@@ -77,6 +96,23 @@ document.addEventListener('mousemove', e => {
         setTimeout(() => t.remove(), 400);
     }, 50);
 });
+
+// Arxa planda qan damcıları
+function spawnBlood() {
+    const b = document.createElement('div');
+    b.className = 'blood';
+    b.style.left = Math.random() * window.innerWidth + 'px';
+    b.style.top = '-20px';
+    b.style.width = (5 + Math.random() * 10) + 'px';
+    b.style.height = (5 + Math.random() * 10) + 'px';
+    document.body.appendChild(b);
+
+    setTimeout(() => b.remove(), 2000); // animasiya sonunda silinir
+}
+
+// Hər 300ms yeni qan damcısı
+setInterval(spawnBlood, 300);
 </script>
 </body>
 </html>
+
