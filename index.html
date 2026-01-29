@@ -135,7 +135,7 @@ h1{
     z-index:10003;
 }
 
-/* Leave düyməsi - ekranın ortasının aşağısında */
+/* Leave düyməsi - ekranın ortasının aşağısında və overlay üstündə */
 #leaveBtn{
     position:fixed;
     bottom:50px;
@@ -147,7 +147,7 @@ h1{
     color:white;
     border:none;
     cursor:pointer;
-    z-index:10004;
+    z-index:10010; /* overlay-lərin üstündə olmasını təmin edir */
 }
 
 /* YOU CAN'T LEAVE yazısı */
@@ -160,7 +160,7 @@ h1{
     font-size:80px;
     text-shadow:0 0 20px red,0 0 50px red;
     display:none;
-    z-index:10005;
+    z-index:10011;
 }
 
 /* Invisible Easter Egg */
@@ -171,7 +171,7 @@ h1{
     font-size:5px;
     color:red;
     opacity:0.05;
-    z-index:10006;
+    z-index:10012;
 }
 </style>
 </head>
@@ -302,4 +302,3 @@ hiddenMsg.textContent = caesarEncrypt("Niye öldüyümüzü bilirsənmi?",3);
 </script>
 </body>
 </html>
-
