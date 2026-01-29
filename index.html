@@ -5,174 +5,133 @@
 <title>YOU MUST DIE!!!</title>
 <meta name="robots" content="noindex, nofollow">
 <style>
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    overflow: hidden;
-    cursor: none;
-}
-
-/* Ortadakı yazı */
-h1 {
-    color: red;
-    font-size: 90px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-shadow: 0 0 20px red, 0 0 40px red;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0.3; }
-}
-
-/* Mouse trail */
-.trail {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background: red;
-    border-radius: 50%;
-    pointer-events: none;
-    opacity: 0.3;
-    box-shadow: 0 0 10px red, 0 0 20px red;
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-}
-
-/* Qan damcıları */
-.blood {
-    position: absolute;
-    border-radius: 50%;
-    background: darkred;
-    opacity: 0.7;
-    box-shadow: 0 0 20px darkred, 0 0 40px darkred;
-    animation: fall linear forwards;
-}
-
-/* Kamera video küncü */
-#cam {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 200px;
-    height: 150px;
-    border: 2px solid red;
-    display: none;
-    z-index: 9999;
-}
-
-/* Kamera uğurlu açıldıqda yazı */
-#seeYou {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    color: red;
-    font-size: 70px;
-    text-shadow: 0 0 20px red, 0 0 50px red;
-    display: none;
-    animation: shake 0.2s infinite;
-    z-index: 9999;
-}
-
-@keyframes shake {
-    0% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-48%) translateY(2px); }
-    100% { transform: translateX(-52%) translateY(-2px); }
-}
-
-/* Enable camera düyməsi */
-#enableCam {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 20px;
-    padding: 10px 20px;
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    z-index: 10000;
-}
+html, body{margin:0;width:100%;height:100%;background:black;overflow:hidden;cursor:none;}
+h1{color:red;font-size:90px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+text-shadow:0 0 20px red,0 0 40px red;animation:blink 1s infinite;}
+@keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0.3;}}
+.trail{position:absolute;width:30px;height:30px;background:red;border-radius:50%;
+pointer-events:none;opacity:0.3;box-shadow:0 0 10px red,0 0 20px red;
+transition:opacity 0.4s ease-out,transform 0.4s ease-out;}
+.blood{position:absolute;border-radius:50%;background:darkred;opacity:0.7;
+box-shadow:0 0 20px darkred,0 0 40px darkred;animation:fall linear forwards;}
+#camOverlay{position:fixed;top:0;left:0;width:100%;height:100%;
+display:none; z-index:9999; filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);}
+#cam{display:none;width:100%;height:100%;object-fit:cover;}
+.glitch{animation:glitch 0.08s infinite;}
+@keyframes glitch{0%{transform:translate(0,0);}20%{transform:translate(-5px,3px);}
+40%{transform:translate(4px,-3px);}60%{transform:translate(-3px,2px);}
+80%{transform:translate(3px,-2px);}100%{transform:translate(0,0);}}
+#seeYou{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+color:red;font-size:140px;text-shadow:0 0 20px red,0 0 100px red;
+display:none;animation:shake 0.05s infinite; z-index:10001;}
+@keyframes shake{0%{transform:translate(-50%,-50%) translateX(0);}
+50%{transform:translate(-50%,-50%) translateX(8px);}
+100%{transform:translate(-50%,-50%) translateX(-8px);}}
+#enableCam{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+font-size:20px;padding:10px 20px;background:red;color:white;border:none;
+cursor:pointer; z-index:10000;}
+#scanline{position:fixed;top:0;left:0;width:100%;height:100%;
+background:repeating-linear-gradient(to bottom, rgba(255,0,0,0.1) 0px,
+rgba(255,0,0,0.2) 2px, rgba(255,0,0,0.1) 4px);
+pointer-events:none;opacity:0; z-index:10002;
+animation:scanBlink 0.05s infinite;}
+@keyframes scanBlink{0%{opacity:0.05;}50%{opacity:0.25;}100%{opacity:0.05;}}
+#flash{position:fixed;top:0;left:0;width:100%;height:100%;background:white;opacity:0; z-index:10003;}
 </style>
 </head>
-
 <body>
 <h1>YOU MUST DIE!!!</h1>
-
-<!-- Enable camera button -->
 <button id="enableCam">Enable Camera</button>
-
 <h2 id="seeYou">I CAN SEE YOU</h2>
-<video id="cam" autoplay></video>
+<div id="camOverlay"><video id="cam" autoplay></video></div>
+<div id="scanline"></div>
+<div id="flash"></div>
 
-<audio autoplay loop>
+<audio id="sfx" autoplay loop>
     <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
+</audio>
+<audio id="glitchSound">
+    <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
 </audio>
 
 <script>
 // Mouse trail
-document.addEventListener('mousemove', e => {
-    const t = document.createElement('div');
-    t.className = 'trail';
-    t.style.left = e.pageX - 15 + 'px';
-    t.style.top = e.pageY - 15 + 'px';
+document.addEventListener('mousemove', e=>{
+    const t=document.createElement('div');
+    t.className='trail';
+    t.style.left=e.pageX-15+'px';
+    t.style.top=e.pageY-15+'px';
     document.body.appendChild(t);
-
-    setTimeout(() => {
-        t.style.opacity = '0';
-        t.style.transform = 'scale(2)';
-        setTimeout(() => t.remove(), 400);
-    }, 50);
+    setTimeout(()=>{t.style.opacity='0';t.style.transform='scale(2)';setTimeout(()=>t.remove(),400)},50);
 });
 
 // Qan damcıları
-function spawnBlood() {
-    const b = document.createElement('div');
-    b.className = 'blood';
-    b.style.left = Math.random() * window.innerWidth + 'px';
-    b.style.width = (10 + Math.random() * 20) + 'px';
-    b.style.height = (10 + Math.random() * 20) + 'px';
-    b.style.animationDuration = (2 + Math.random() * 3) + 's';
-    b.style.top = '-20px';
+function spawnBlood(){
+    const b=document.createElement('div');
+    b.className='blood';
+    b.style.left=Math.random()*window.innerWidth+'px';
+    b.style.width=(10+Math.random()*20)+'px';
+    b.style.height=(10+Math.random()*20)+'px';
+    b.style.animationDuration=(2+Math.random()*3)+'s';
+    b.style.top='-20px';
     document.body.appendChild(b);
-    setTimeout(() => b.remove(), 5000);
+    setTimeout(()=>b.remove(),5000);
 }
-setInterval(spawnBlood, 200);
+setInterval(spawnBlood,150);
 
-// Enable camera düyməsi
-document.getElementById("enableCam").addEventListener("click", () => {
-    // fullscreen
-    let elem = document.documentElement;
-    if (elem.requestFullscreen) elem.requestFullscreen();
-    else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
-    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+// Enable camera + jumpscare
+document.getElementById("enableCam").addEventListener("click",()=>{
+    let elem=document.documentElement;
+    if(elem.requestFullscreen) elem.requestFullscreen();
 
-    // Kamera açmaq
-    const video = document.getElementById("cam");
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-            video.style.display = "block";
-            document.getElementById("seeYou").style.display = "block";
-            // düyməni gizlət
-            document.getElementById("enableCam").style.display = "none";
+    const camOverlay=document.getElementById("camOverlay");
+    const video=document.getElementById("cam");
+    navigator.mediaDevices.getUserMedia({video:true})
+        .then(stream=>{
+            video.srcObject=stream;
+            camOverlay.style.display="block";
+            video.style.display="block";
+            video.classList.add("glitch");
+            document.getElementById("seeYou").style.display="block";
+            document.getElementById("enableCam").style.display="none";
+
+            // Overlay scanline
+            document.getElementById("scanline").style.opacity=0.25;
+
+            // Flash effect
+            const flash=document.getElementById("flash");
+            flash.style.opacity=1;
+            setTimeout(()=>flash.style.opacity=0,150);
+
+            // Screen shake
+            let shakeCount=0;
+            const shakeInterval=setInterval(()=>{
+                const x=(Math.random()-0.5)*20;
+                const y=(Math.random()-0.5)*20;
+                document.body.style.transform=`translate(${x}px,${y}px)`;
+                shakeCount++;
+                if(shakeCount>15){clearInterval(shakeInterval); document.body.style.transform='';}
+            },50);
+
+            // Səs jumpscare
+            const glitchSound=document.getElementById("glitchSound");
+            glitchSound.play();
+            const sfx=document.getElementById("sfx");
+            sfx.volume=1.0;
         })
-        .catch(err => {
-            alert("Kamera icazəsi verilmədi");
-        });
+        .catch(err=>{ alert("Kamera icazəsi verilmədi"); });
 });
+
+// Easter Egg: Caesar Cipher "YOU MUST DIE" -> shift 3
+function caesarEncrypt(str, shift) {
+    return str.split('').map(c=>{
+        const code = c.charCodeAt(0);
+        if(code >= 65 && code <= 90){ return String.fromCharCode((code-65+shift)%26+65);}
+        else if(code >=97 && code <=122){ return String.fromCharCode((code-97+shift)%26+97);}
+        else return c;
+    }).join('');
+}
+console.log("Easter Egg Found: " + caesarEncrypt("YOU MUST DIE",3));
 </script>
 </body>
 </html>
-
-
-
-
