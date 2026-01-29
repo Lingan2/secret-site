@@ -47,18 +47,30 @@ h1 {
 /* Qan damcıları */
 .blood {
     position: absolute;
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
     background: darkred;
     border-radius: 50%;
-    opacity: 0.7;
-    box-shadow: 0 0 20px darkred, 0 0 40px darkred;
-    animation: fall linear forwards;
+    opacity: 0.6;
+    box-shadow: 0 0 10px darkred;
+    animation: fall 2s linear forwards;
 }
 
 @keyframes fall {
     0% { transform: translateY(0); opacity: 0.8; }
     100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Kamera video küncü */
+#cam {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+    height: 150px;
+    border: 2px solid red;
+    display: none;
+    z-index: 9999;
 }
 </style>
 </head>
@@ -70,7 +82,31 @@ h1 {
     <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
 </audio>
 
+<!-- Kamera video elementi -->
+<video id="cam" autoplay></video>
+
 <script>
+// Tam ekran effekti
+function openFullscreen() {
+    let elem = document.documentElement;
+    if (elem.requestFullscreen) { elem.requestFullscreen(); }
+    else if (elem.mozRequestFullScreen) { elem.mozRequestFullScreen(); }
+    else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+    else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+
+    // Kamera aktivləşdir
+    const video = document.getElementById('cam');
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(stream => {
+            video.srcObject = stream;
+            video.style.display = 'block';
+        })
+        .catch(err => {
+            console.log("Kamera icazəsi verilməyib:", err);
+        });
+}
+document.addEventListener('click', openFullscreen);
+
 // Mouse trail
 document.addEventListener('mousemove', e => {
     const t = document.createElement('div');
@@ -91,18 +127,17 @@ function spawnBlood() {
     const b = document.createElement('div');
     b.className = 'blood';
     b.style.left = Math.random() * window.innerWidth + 'px';
-    b.style.width = (10 + Math.random() * 20) + 'px';
-    b.style.height = (10 + Math.random() * 20) + 'px';
-    b.style.animationDuration = (2 + Math.random() * 3) + 's'; // fərqli sürət
+    b.style.top = '-20px';
+    b.style.width = (5 + Math.random() * 10) + 'px';
+    b.style.height = (5 + Math.random() * 10) + 'px';
     document.body.appendChild(b);
 
-    setTimeout(() => b.remove(), 5000); // uzun müddət görünür
+    setTimeout(() => b.remove(), 2000);
 }
-
-// Hər 200ms yeni qan damcısı
-setInterval(spawnBlood, 200);
+setInterval(spawnBlood, 300);
 </script>
 </body>
 </html>
+
 
 
