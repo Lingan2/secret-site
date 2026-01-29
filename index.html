@@ -12,6 +12,7 @@ html, body{
     background:black;
     overflow:hidden;
     cursor:none;
+    position:relative;
 }
 h1{
     color:red;
@@ -61,8 +62,8 @@ h1{
     position: fixed;
     top:0;
     left:0;
-    width:50%;      /* sol üst kvadrat eni */
-    height:50%;     /* sol üst kvadrat hündürlüyü */
+    width:50%;
+    height:50%;
     display:none;
     z-index:9999;
     overflow:hidden;
@@ -133,6 +134,44 @@ h1{
     opacity:0;
     z-index:10003;
 }
+
+/* Leave düyməsi */
+#leaveBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    padding:10px 20px;
+    font-size:18px;
+    background:red;
+    color:white;
+    border:none;
+    cursor:pointer;
+    z-index:10004;
+}
+
+/* YOU CAN'T LEAVE yazısı */
+#cantLeave{
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    color:red;
+    font-size:80px;
+    text-shadow:0 0 20px red,0 0 50px red;
+    display:none;
+    z-index:10005;
+}
+
+/* Invisible Easter Egg */
+#hiddenMsg{
+    position:fixed;
+    top:0;
+    left:0;
+    font-size:5px;
+    color:red;
+    opacity:0.05;
+    z-index:10006;
+}
 </style>
 </head>
 <body>
@@ -142,6 +181,10 @@ h1{
 <div id="camOverlay"><video id="cam" autoplay muted></video></div>
 <div id="scanline"></div>
 <div id="flash"></div>
+
+<button id="leaveBtn">Leave</button>
+<div id="cantLeave">YOU CAN'T LEAVE</div>
+<div id="hiddenMsg"></div>
 
 <!-- Səslər -->
 <audio id="sfx" autoplay loop>
@@ -222,7 +265,27 @@ setTimeout(()=>{
 
 }, 10000); // 10 saniyə
 
-// Easter Egg: Caesar Cipher "YOU MUST DIE" -> shift 3
+// Leave düyməsi effekti
+const leaveBtn = document.getElementById("leaveBtn");
+leaveBtn.addEventListener('click', ()=>{
+    const cantLeave=document.getElementById("cantLeave");
+    cantLeave.style.display="block";
+
+    // Əlavə glitch + blood + screen shake
+    for(let i=0;i<20;i++){ spawnBlood(); }
+    let shakeCount=0;
+    const shakeInterval=setInterval(()=>{
+        const x=(Math.random()-0.5)*40;
+        const y=(Math.random()-0.5)*40;
+        document.body.style.transform=`translate(${x}px,${y}px)`;
+        shakeCount++;
+        if(shakeCount>15){clearInterval(shakeInterval); document.body.style.transform='';}
+    },50);
+
+    setTimeout(()=>cantLeave.style.display="none",2000);
+});
+
+// Easter Egg: Caesar Cipher
 function caesarEncrypt(str, shift) {
     return str.split('').map(c=>{
         const code = c.charCodeAt(0);
@@ -231,8 +294,10 @@ function caesarEncrypt(str, shift) {
         else return c;
     }).join('');
 }
-console.log("Easter Egg Found: " + caesarEncrypt("YOU MUST DIE",3));
+// Secret hidden message
+const hiddenMsg=document.getElementById("hiddenMsg");
+hiddenMsg.textContent = caesarEncrypt("Niye öldüyümüzü bilirsənmi?",3);
+
 </script>
 </body>
 </html>
-
