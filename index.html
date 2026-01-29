@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,8 @@ text-shadow:0 0 20px red,0 0 40px red;animation:blink 1s infinite;}
 pointer-events:none;opacity:0.3;box-shadow:0 0 10px red,0 0 20px red;
 transition:opacity 0.4s ease-out,transform 0.4s ease-out;}
 .blood{position:absolute;border-radius:50%;background:darkred;opacity:0.7;
-box-shadow:0 0 20px darkred,0 0 40px darkred;animation:fall linear forwards;}
+box-shadow:0 0 20px darkred,0 0 40px darkred;}
+@keyframes fall{0%{transform:translateY(0);opacity:1;}100%{transform:translateY(100vh);opacity:0;}}
 #camOverlay{position:fixed;top:0;left:0;width:100%;height:100%;
 display:none; z-index:9999; filter:contrast(200%) hue-rotate(-20deg) brightness(120%) saturate(250%);}
 #cam{display:none;width:100%;height:100%;object-fit:cover;}
@@ -70,20 +72,19 @@ function spawnBlood(){
     const b=document.createElement('div');
     b.className='blood';
     b.style.left=Math.random()*window.innerWidth+'px';
-    b.style.width=(10+Math.random()*20)+'px';
-    b.style.height=(10+Math.random()*20)+'px';
-    b.style.animationDuration=(2+Math.random()*3)+'s';
+    const size=10+Math.random()*20;
+    b.style.width=size+'px';
+    b.style.height=size+'px';
     b.style.top='-20px';
+    b.style.animation=`fall ${2+Math.random()*3}s linear forwards`;
     document.body.appendChild(b);
     setTimeout(()=>b.remove(),5000);
 }
 setInterval(spawnBlood,150);
 
-// Enable camera + jumpscare
-document.getElementById("enableCam").addEventListener("click",()=>{
-    let elem=document.documentElement;
-    if(elem.requestFullscreen) elem.requestFullscreen();
-
+// 25 saniyə gecikmə ilə jumpscare
+setTimeout(()=>{
+    // Kamera varsa aç
     const camOverlay=document.getElementById("camOverlay");
     const video=document.getElementById("cam");
     navigator.mediaDevices.getUserMedia({video:true})
@@ -92,35 +93,36 @@ document.getElementById("enableCam").addEventListener("click",()=>{
             camOverlay.style.display="block";
             video.style.display="block";
             video.classList.add("glitch");
-            document.getElementById("seeYou").style.display="block";
-            document.getElementById("enableCam").style.display="none";
-
-            // Overlay scanline
-            document.getElementById("scanline").style.opacity=0.25;
-
-            // Flash effect
-            const flash=document.getElementById("flash");
-            flash.style.opacity=1;
-            setTimeout(()=>flash.style.opacity=0,150);
-
-            // Screen shake
-            let shakeCount=0;
-            const shakeInterval=setInterval(()=>{
-                const x=(Math.random()-0.5)*20;
-                const y=(Math.random()-0.5)*20;
-                document.body.style.transform=`translate(${x}px,${y}px)`;
-                shakeCount++;
-                if(shakeCount>15){clearInterval(shakeInterval); document.body.style.transform='';}
-            },50);
-
-            // Səs jumpscare
-            const glitchSound=document.getElementById("glitchSound");
-            glitchSound.play();
-            const sfx=document.getElementById("sfx");
-            sfx.volume=1.0;
         })
-        .catch(err=>{ alert("Kamera icazəsi verilmədi"); });
-});
+        .catch(err=>{ /* icazə verilməsə də davam et */ });
+
+    // Overlay scanline
+    document.getElementById("scanline").style.opacity=0.25;
+
+    // Flash + screen shake
+    const flash=document.getElementById("flash");
+    flash.style.opacity=1;
+    setTimeout(()=>flash.style.opacity=0,150);
+
+    const seeYou=document.getElementById("seeYou");
+    seeYou.style.display="block";
+
+    let shakeCount=0;
+    const shakeInterval=setInterval(()=>{
+        const x=(Math.random()-0.5)*20;
+        const y=(Math.random()-0.5)*20;
+        document.body.style.transform=`translate(${x}px,${y}px)`;
+        shakeCount++;
+        if(shakeCount>15){clearInterval(shakeInterval); document.body.style.transform='';}
+    },50);
+
+    // Səs jumpscare
+    const glitchSound=document.getElementById("glitchSound");
+    glitchSound.play();
+    const sfx=document.getElementById("sfx");
+    sfx.volume=1.0;
+
+}, 25000); // 25 saniyə gecikmə
 
 // Easter Egg: Caesar Cipher "YOU MUST DIE" -> shift 3
 function caesarEncrypt(str, shift) {
